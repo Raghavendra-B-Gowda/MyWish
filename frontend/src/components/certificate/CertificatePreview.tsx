@@ -10,8 +10,8 @@ export function CertificatePreview({ demo = false, overrideData }: { demo?: bool
   const generatedId = store.generatedId;
   const certId = demo ? "MW-2026-DEMO" : generatedId || "MW-2026-XXXXXX";
   
-  // Verification URL to be encoded in the QR code
-  const domain = import.meta.env.VITE_APP_URL || SEO_CONFIG.SITE_URL;
+  // Verification URL to be encoded in the QR code (dynamically use current origin)
+  const domain = import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : SEO_CONFIG.SITE_URL);
   const verificationUrl = `${domain}/verify/${certId}`;
 
   // Shared content helpers
