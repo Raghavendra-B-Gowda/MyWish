@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Preview &amp; Generate Certificate</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Great+Vibes&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "surface-dim": "#d9dadb",
+                        "inverse-surface": "#2e3132",
+                        "primary": "#000666",
+                        "inverse-primary": "#bdc2ff",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "secondary-container": "#acedda",
+                        "tertiary": "#380b00",
+                        "on-secondary-fixed": "#00201a",
+                        "surface-container-high": "#e7e8e9",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#454652",
+                        "on-primary-fixed-variant": "#343d96",
+                        "on-background": "#191c1d",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#94d3c1",
+                        "on-primary-container": "#8690ee",
+                        "tertiary-fixed": "#ffdbd0",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-fixed": "#000767",
+                        "on-secondary-fixed-variant": "#065043",
+                        "surface-container-low": "#f3f4f5",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#afefdd",
+                        "on-tertiary-fixed": "#390c00",
+                        "primary-container": "#1a237e",
+                        "on-error-container": "#93000a",
+                        "outline": "#767683",
+                        "tertiary-container": "#5c1800",
+                        "secondary": "#29695b",
+                        "primary-fixed": "#e0e0ff",
+                        "outline-variant": "#c6c5d4",
+                        "on-tertiary-fixed-variant": "#7b2e12",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#2e6d5f",
+                        "on-surface": "#191c1d",
+                        "on-tertiary-container": "#e17c5a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "surface-tint": "#4c56af",
+                        "background": "#f8f9fa",
+                        "gold": {
+                            "light": "#f4d068",
+                            "DEFAULT": "#c59d5f",
+                            "dark": "#9b7a3a"
+                        }
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1200px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "margin-desktop": "64px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "label-md": ["Geist"],
+                        "headline-xl": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "caption": ["Geist"],
+                        "body-md": ["Geist"],
+                        "serif": ["'Playfair Display'", "serif"],
+                        "cursive": ["'Great Vibes'", "cursive"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .cert-texture {
+            background-color: #fcf9f2;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+        .gold-border {
+            border: 4px solid #c59d5f;
+            outline: 1px solid #c59d5f;
+            outline-offset: 4px;
+        }
+        /* Mobile-first approach for the certificate */
+        .cert-container {
+            width: 100%;
+            padding-bottom: 75%; /* 4:3 aspect ratio */
+            position: relative;
+        }
+        .cert-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: top left;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 max-w-container-max mx-auto bg-surface-container-lowest text-primary shadow-sm border-b border-surface-variant">
+<div class="flex items-center gap-4">
+<button aria-label="Go back" class="p-2 hover:bg-surface-container rounded-full transition-colors" onclick="showPreview()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary">MYWISH</h1>
+</div>
+<div>
+<!-- Header Trailing Action usually suppressed in flow, keeping consistent with Brand Anchors if needed, but contextually this is a transactional flow -->
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-[80px] pb-margin-mobile px-margin-mobile w-full max-w-container-max mx-auto flex flex-col gap-stack-lg">
+<!-- Progress Indicator -->
+<div class="w-full flex justify-between items-center px-4 mb-2">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">4</div>
+<span class="font-label-md text-label-md text-primary font-medium">Preview</span>
+</div>
+<div class="h-[2px] flex-grow bg-surface-variant mx-4">
+<div class="h-full bg-primary w-[80%]"></div>
+</div>
+<div class="flex items-center gap-2 opacity-50" id="step5-indicator">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-md text-label-md">5</div>
+</div>
+</div>
+<!-- Section: Preview -->
+<section class="flex flex-col gap-stack-md w-full animate-fade-in" id="preview-section">
+<div class="text-center mb-2">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-1">Review your Certificate</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Ensure all details are correct before generating.</p>
+</div>
+<!-- Certificate Preview Container -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant p-4 relative overflow-hidden flex flex-col items-center">
+<!-- Toolbar overlay -->
+<div class="absolute top-6 right-6 z-10 flex gap-2">
+<button class="w-10 h-10 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm shadow-md flex items-center justify-center text-on-surface hover:text-primary transition-colors border border-surface-variant">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+</div>
+<!-- The Certificate -->
+<!-- Note: Using CSS aspect ratio for mobile scaling, actual implementation might use scaling transforms based on container width -->
+<div class="w-full relative shadow-md" style="padding-bottom: 75%;">
+<div class="absolute inset-0 bg-[#3a2f26] p-4 sm:p-8 flex items-center justify-center">
+<div class="w-full h-full cert-texture relative shadow-xl gold-border p-4 sm:p-8 flex flex-col items-center justify-between text-center overflow-hidden">
+<!-- Inner decorative border -->
+<div class="absolute inset-2 border-[2px] border-gold-light opacity-50"></div>
+<!-- Header -->
+<div class="z-10 mt-2 sm:mt-6">
+<h1 class="font-serif text-[18px] sm:text-[32px] tracking-widest text-[#3a2a18] uppercase mb-1 sm:mb-4">Certificate of Completion</h1>
+<p class="font-sans text-[10px] sm:text-[14px] text-gray-700">Presented to</p>
+</div>
+<!-- Name -->
+<div class="z-10 my-2 sm:my-4">
+<h2 class="font-cursive text-[32px] sm:text-[56px] text-gray-900 leading-none">Raghavendra B Gowda</h2>
+</div>
+<!-- Course -->
+<div class="z-10">
+<h3 class="font-serif text-[16px] sm:text-[28px] text-[#3a2a18] mb-1">Web Development</h3>
+<p class="font-sans text-[10px] sm:text-[14px] text-gray-700">40 Hours</p>
+</div>
+<!-- Footer Details -->
+<div class="z-10 w-full flex justify-between items-end mt-4 sm:mt-8 px-2 sm:px-8">
+<div class="text-left">
+<p class="font-sans text-[8px] sm:text-[12px] text-gray-600 mb-1">Issue Date: 09 August 2026</p>
+</div>
+<!-- Seal -->
+<div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-gold-dark shadow-inner flex items-center justify-center border-2 border-gold-light">
+<div class="w-10 h-10 sm:w-20 sm:h-20 rounded-full border border-gold-light flex items-center justify-center">
+<span class="material-symbols-outlined text-gold-light text-[20px] sm:text-[40px]">menu_book</span>
+</div>
+</div>
+<div class="text-right flex flex-col items-end">
+<div class="border-b border-gray-400 pb-1 mb-1 sm:mb-2 w-24 sm:w-40">
+<p class="font-cursive text-[14px] sm:text-[24px] text-gray-800 leading-none">Dr. E. Sterling</p>
+</div>
+<p class="font-sans text-[8px] sm:text-[12px] text-gray-600">Dr. E. Sterling, Dean</p>
+<div class="mt-2 sm:mt-4 flex items-center gap-2">
+<!-- Fake QR Code -->
+<div class="w-8 h-8 sm:w-12 sm:h-12 bg-white p-1">
+<div class="w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik0zIDNoNnY2SDN6bTIgMmgydjJINXptOC0yaDZ2NmgtNnptMiAyaDJ2MmgteptNCAwaDJ2MmgteptLTQgMmgydjJoLTJ6TTMgMTNoNnY2SDN6bTIgMmgydjJINXptOCAwSDl2LTJoNHptMCAwaDJ2MmgteptLTQgMmgydjJoLTJ6bTQgMGg0di0yaDJ2NGgtNnptNCAwaDJ2MmgtenoiLz48L3N2Zz4=')] bg-cover"></div>
+</div>
+<p class="font-sans text-[6px] sm:text-[10px] text-gray-500">Certificate ID: MW-8F42K91</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Logos Slider Section -->
+<style>
+    #logo-scroller::-webkit-scrollbar { display: none; }
+    .logo-item { flex-shrink: 0; height: 48px; object-fit: contain; cursor: pointer; transition: all 0.2s; filter: grayscale(100%) opacity(0.7); }
+    .logo-item:hover { transform: scale(1.05); filter: grayscale(0%) opacity(1); }
+</style>
+<div class="w-full py-6 flex flex-col gap-2 bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant overflow-hidden mt-2 mb-2">
+    <p class="font-label-md text-label-md text-on-surface-variant text-center uppercase tracking-widest px-4">Trusted By</p>
+    <div class="relative w-full">
+        <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-surface-container-lowest to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-surface-container-lowest to-transparent z-10 pointer-events-none"></div>
+        
+        <div id="logo-scroller" class="flex overflow-x-auto gap-12 items-center py-4 px-4 select-none cursor-grab active:cursor-grabbing" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <img src="../../Logo's/averon_careers_logo/screen.png" alt="Averon Careers" class="logo-item" draggable="false">
+            <img src="../../Logo's/clevora_careers_logo/screen.png" alt="Clevora Careers" class="logo-item" draggable="false">
+            <img src="../../Logo's/coursa_logo/screen.png" alt="Coursa" class="logo-item" draggable="false">
+            <img src="../../Logo's/coursio_logo/screen.png" alt="Coursio" class="logo-item" draggable="false">
+            <img src="../../Logo's/edvixo_logo/screen.png" alt="Edvixo" class="logo-item" draggable="false">
+            <img src="../../Logo's/edvra_logo/screen.png" alt="Edvra" class="logo-item" draggable="false">
+            <img src="../../Logo's/kursly_logo/screen.png" alt="Kursly" class="logo-item" draggable="false">
+            <img src="../../Logo's/learnix_logo/screen.png" alt="Learnix" class="logo-item" draggable="false">
+            <img src="../../Logo's/learnova_logo/screen.png" alt="Learnova" class="logo-item" draggable="false">
+            <img src="../../Logo's/nexvanta_labs_logo/screen.png" alt="Nexvanta Labs" class="logo-item" draggable="false">
+            <img src="../../Logo's/skillra_logo/screen.png" alt="Skillra" class="logo-item" draggable="false">
+            <img src="../../Logo's/skillvo_logo/screen.png" alt="Skillvo" class="logo-item" draggable="false">
+            <img src="../../Logo's/skillzo_logo/screen.png" alt="Skillzo" class="logo-item" draggable="false">
+            <img src="../../Logo's/velora_interns_logo/screen.png" alt="Velora Interns" class="logo-item" draggable="false">
+            <img src="../../Logo's/virexa_interns_logo/screen.png" alt="Virexa Interns" class="logo-item" draggable="false">
+        </div>
+    </div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-stack-sm mt-4">
+<button class="w-full h-[44px] bg-primary text-on-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-sm hover:-translate-y-[1px] active:translate-y-0" onclick="showSuccess()">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+                    Generate Certificate
+                </button>
+<div class="flex gap-stack-sm">
+<button class="flex-1 h-[44px] border-[1.5px] border-outline text-on-surface font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Preview
+                    </button>
+<button class="flex-1 h-[44px] border-[1.5px] border-outline text-on-surface font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+                        Edit
+                    </button>
+</div>
+</div>
+</section>
+<!-- Section: Success (Hidden by default) -->
+<section class="hidden flex-col gap-stack-lg w-full items-center text-center animate-fade-in pt-8" id="success-section">
+<div class="w-24 h-24 rounded-full bg-secondary/10 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-secondary text-[48px]" data-weight="fill">check_circle</span>
+</div>
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Certificate Ready!</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Your certificate has been successfully generated and secured.</p>
+</div>
+<!-- Verified Chip -->
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary/10 text-secondary rounded-xl font-label-md text-label-md border border-secondary/20">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+                ID: MW-8F42K91
+            </div>
+<!-- Download Options -->
+<div class="w-full flex flex-col gap-stack-sm mt-4">
+<button class="w-full h-[44px] bg-primary text-on-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+                    Download PDF
+                </button>
+<button class="w-full h-[44px] border-[1.5px] border-primary text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">image</span>
+                    Download PNG
+                </button>
+</div>
+<!-- Secondary Actions -->
+<div class="w-full flex flex-col gap-stack-sm">
+<button class="w-full h-[44px] border-[1.5px] border-outline text-on-surface font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">share</span>
+                    Share Certificate
+                </button>
+<button class="w-full h-[44px] text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">link</span>
+                    View Verification Link
+                </button>
+</div>
+</section>
+</main>
+<script>
+        function showSuccess() {
+            document.getElementById('preview-section').classList.add('hidden');
+            document.getElementById('preview-section').classList.remove('flex');
+            
+            document.getElementById('success-section').classList.remove('hidden');
+            document.getElementById('success-section').classList.add('flex');
+
+            // Update progress indicator
+            const step5 = document.getElementById('step5-indicator');
+            step5.classList.remove('opacity-50');
+            step5.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">5</div>
+                <span class="font-label-md text-label-md text-primary font-medium">Ready</span>
+            `;
+        }
+
+        function showPreview() {
+            document.getElementById('success-section').classList.add('hidden');
+            document.getElementById('success-section').classList.remove('flex');
+            
+            document.getElementById('preview-section').classList.remove('hidden');
+            document.getElementById('preview-section').classList.add('flex');
+
+            // Revert progress indicator
+            const step5 = document.getElementById('step5-indicator');
+            step5.classList.add('opacity-50');
+            step5.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-md text-label-md">5</div>
+            `;
+        }
+
+        // Logo Scroller Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const scroller = document.getElementById('logo-scroller');
+            if (!scroller) return;
+
+            let isHovering = false;
+            let isDragging = false;
+            let startX, scrollLeft;
+            
+            // Clone logos for infinite scroll
+            const logos = Array.from(scroller.children);
+            logos.forEach(logo => {
+                const clone = logo.cloneNode(true);
+                scroller.appendChild(clone);
+            });
+
+            // Start at the middle to allow left-to-right scrolling immediately
+            // Note: timeout ensures the DOM has laid out the cloned elements
+            setTimeout(() => {
+                scroller.scrollLeft = scroller.scrollWidth / 2;
+            }, 100);
+
+            function autoScroll() {
+                if (!isHovering && !isDragging) {
+                    scroller.scrollLeft -= 1; // Moving left to right
+                    if (scroller.scrollLeft <= 0) {
+                        scroller.scrollLeft = scroller.scrollWidth / 2;
+                    }
+                }
+                requestAnimationFrame(autoScroll);
+            }
+            
+            scroller.addEventListener('mouseenter', () => isHovering = true);
+            scroller.addEventListener('mouseleave', () => {
+                isHovering = false;
+                isDragging = false;
+            });
+            
+            scroller.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.pageX - scroller.offsetLeft;
+                scrollLeft = scroller.scrollLeft;
+            });
+            scroller.addEventListener('mouseup', () => isDragging = false);
+            scroller.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - scroller.offsetLeft;
+                const walk = (x - startX) * 2;
+                scroller.scrollLeft = scrollLeft - walk;
+            });
+
+            requestAnimationFrame(autoScroll);
+        });
+    </script>
+</body></html>

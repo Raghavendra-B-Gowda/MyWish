@@ -1,0 +1,450 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>MyWish - Create certificates that people can trust.</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "surface-dim": "#d9dadb",
+                        "inverse-surface": "#2e3132",
+                        "primary": "#000666",
+                        "inverse-primary": "#bdc2ff",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "secondary-container": "#acedda",
+                        "tertiary": "#380b00",
+                        "on-secondary-fixed": "#00201a",
+                        "surface-container-high": "#e7e8e9",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#454652",
+                        "on-primary-fixed-variant": "#343d96",
+                        "on-background": "#191c1d",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#94d3c1",
+                        "on-primary-container": "#8690ee",
+                        "tertiary-fixed": "#ffdbd0",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-fixed": "#000767",
+                        "on-secondary-fixed-variant": "#065043",
+                        "surface-container-low": "#f3f4f5",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#afefdd",
+                        "on-tertiary-fixed": "#390c00",
+                        "primary-container": "#1a237e",
+                        "on-error-container": "#93000a",
+                        "outline": "#767683",
+                        "tertiary-container": "#5c1800",
+                        "secondary": "#29695b",
+                        "primary-fixed": "#e0e0ff",
+                        "outline-variant": "#c6c5d4",
+                        "on-tertiary-fixed-variant": "#7b2e12",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#2e6d5f",
+                        "on-surface": "#191c1d",
+                        "on-tertiary-container": "#e17c5a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "surface-tint": "#4c56af",
+                        "background": "#f8f9fa"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1200px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "margin-desktop": "64px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "label-md": ["Geist"],
+                        "headline-xl": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "caption": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Geist', sans-serif; background-color: #f8f9fa; }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(248, 249, 250, 1) 0%, rgba(225, 227, 228, 0.4) 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 4px 12px -2px rgba(0, 6, 102, 0.04), 0 0 0 1px #E0E0E0;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(0, 6, 102, 0.08), 0 0 0 1px #E0E0E0;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        
+        /* Carousel Styles */
+        .carousel-container {
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox */
+        }
+        .carousel-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        .carousel-item {
+            scroll-snap-align: start;
+        }
+    </style>
+</head>
+<body class="text-on-background bg-background min-h-screen flex flex-col pt-16">
+<!-- TopAppBar -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-surface-variant dark:border-outline-variant shadow-sm dark:shadow-none fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<button aria-label="Menu" class="text-primary dark:text-inverse-primary hover:text-primary dark:hover:text-inverse-primary transition-colors duration-200" onclick="document.getElementById('navDrawer').classList.toggle('-translate-x-full')">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">menu</span>
+</button>
+<a class="flex items-center gap-2" href="#">
+<img alt="MyWish Logo" class="h-8 w-auto" data-alt="MyWish wordmark logo" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg">
+</a>
+</div>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+            Get Started
+        </button>
+</header>
+<!-- NavigationDrawer (Hidden by default) -->
+<div class="bg-surface dark:bg-inverse-surface h-full w-72 rounded-r-xl shadow-xl fixed inset-y-0 left-0 z-[60] transition-all duration-300 ease-in-out -translate-x-full" id="navDrawer">
+<div class="p-4 flex items-center justify-between border-b border-surface-variant">
+<img alt="MyWish Logo" class="h-6 w-auto" data-alt="MyWish wordmark logo" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg">
+<button class="text-on-surface-variant hover:text-primary transition-colors" onclick="document.getElementById('navDrawer').classList.add('-translate-x-full')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<nav class="p-4 flex flex-col gap-2">
+<a class="flex items-center gap-4 bg-primary-container text-on-primary-container rounded-lg px-4 py-3 border-l-4 border-primary font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">home</span>
+                Home
+            </a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-surface-variant px-4 py-3 hover:bg-surface-container-high dark:hover:bg-surface-variant font-label-md text-label-md transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Templates
+            </a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-surface-variant px-4 py-3 hover:bg-surface-container-high dark:hover:bg-surface-variant font-label-md text-label-md transition-colors" href="#">
+<span class="material-symbols-outlined">verified</span>
+                Verify
+            </a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-surface-variant px-4 py-3 hover:bg-surface-container-high dark:hover:bg-surface-variant font-label-md text-label-md transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+                Pricing
+            </a>
+<div class="mt-4 pt-4 border-t border-surface-variant">
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-surface-variant px-4 py-3 hover:bg-surface-container-high dark:hover:bg-surface-variant font-label-md text-label-md transition-colors" href="#">
+<span class="material-symbols-outlined">login</span>
+                    Login
+                </a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-surface-variant px-4 py-3 hover:bg-surface-container-high dark:hover:bg-surface-variant font-label-md text-label-md transition-colors" href="#">
+<span class="material-symbols-outlined">stars</span>
+                    Get Started
+                </a>
+</div>
+</nav>
+</div>
+<!-- Overlay for Drawer -->
+<div class="fixed inset-0 bg-black/20 z-50 hidden" id="drawerOverlay" onclick="document.getElementById('navDrawer').classList.add('-translate-x-full'); this.classList.add('hidden')"></div>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col gap-stack-lg">
+<!-- Hero Section -->
+<section class="hero-bg rounded-xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-stack-lg overflow-hidden relative">
+<div class="flex-1 flex flex-col gap-stack-md z-10">
+<h1 class="font-headline-lg-mobile md:font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-background max-w-xl">
+                    Create certificates that people can trust.
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
+                    Create professional certificates in minutes, add secure QR verification, and share certificates that anyone can verify.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4 mt-4">
+<button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-lg hover:bg-opacity-90 transition-all flex items-center justify-center gap-2 h-12 shadow-sm">
+                        Create My Certificate
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="bg-transparent text-primary border-2 border-primary font-label-md text-label-md px-6 py-3 rounded-lg hover:bg-primary-fixed transition-all flex items-center justify-center gap-2 h-12">
+                        Verify a Certificate
+                        <span class="material-symbols-outlined text-sm">verified</span>
+</button>
+</div>
+</div>
+<div class="flex-1 relative w-full max-w-md mx-auto md:mr-0 z-10 mt-8 md:mt-0">
+<div class="relative rounded-xl overflow-hidden shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500 ease-out">
+
+</div>
+<!-- Floating Badge -->
+
+</div>
+<!-- Decorative Elements -->
+<div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-primary-fixed rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
+<div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-48 h-48 bg-secondary-fixed rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
+</section>
+<!-- Certificate Showcase -->
+<section class="py-stack-lg flex flex-col gap-stack-md relative overflow-hidden bg-white rounded-xl shadow-sm border border-outline-variant/30">
+<div class="px-6 md:px-12 text-center max-w-3xl mx-auto mb-4">
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-3">Create a certificate you'll be proud to share.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Choose from beautiful professional designs and customize your certificate in minutes.</p>
+</div>
+<!-- Carousel Container -->
+<div class="relative w-full">
+<!-- Navigation Arrows -->
+<button class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 shadow-md border border-outline-variant/20 rounded-full w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container transition-colors hidden sm:flex" id="prevBtn" onclick="scrollCarousel(-1)">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 shadow-md border border-outline-variant/20 rounded-full w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container transition-colors hidden sm:flex" id="nextBtn" onclick="scrollCarousel(1)">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+<!-- Carousel Track -->
+<div class="carousel-container flex overflow-x-auto gap-4 px-4 sm:px-12 pb-8 pt-4" id="carouselTrack">
+<!-- Template 1 -->
+<div class="carousel-item flex-none w-[85%] sm:w-[60%] md:w-[45%] lg:w-[30%] min-w-[280px]">
+<div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden card-shadow h-full flex flex-col border border-surface-variant">
+<div class="relative overflow-hidden aspect-[4/3] bg-surface-container-low flex items-center justify-center p-4">
+<img alt="Modern Certificate Design" class="w-full h-auto object-contain shadow-sm transform group-hover:scale-105 transition-transform duration-500" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+<a class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-lg hover:bg-primary/90 flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg" href="#">
+                                Use this template
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1 border-t border-surface-variant bg-white">
+<h4 class="font-headline-sm text-base text-on-surface font-semibold">Sovereign Classic</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Elegant serif typography with traditional borders.</p>
+</div>
+</div>
+</div>
+<!-- Template 2 -->
+<div class="carousel-item flex-none w-[85%] sm:w-[60%] md:w-[45%] lg:w-[30%] min-w-[280px]">
+<div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden card-shadow h-full flex flex-col border border-surface-variant">
+<div class="relative overflow-hidden aspect-[4/3] bg-surface-container-low flex items-center justify-center p-4">
+<img alt="Minimalist Certificate Design" class="w-full h-auto object-contain shadow-sm transform group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-T_4aInZ4OiiNWrDs0b4lR9r71sXQqbkIEs_cDQlprtshWgPHkD0Wh1vtX6rJNjD-44a3bLkJs7_7U84zI2LVaoIRahtaKPARi_aA6MPNmXSf8mZRUdpuyb3jj_rFNcXCHfqDvDc2RovzmEDFPRpST0oDmDsffSEIfu69vXUkaywJl3rNFsQlQh-lM4Zs89E8uggjGnNCnbG6WH4qUzVnOw2LKbLDZSV0QTrNrSp-KTUsrZvIwKkU">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+<a class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-lg hover:bg-primary/90 flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg" href="#">
+                                Use this template
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1 border-t border-surface-variant bg-white">
+<h4 class="font-headline-sm text-base text-on-surface font-semibold">Modern Minimal</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Clean lines and generous whitespace for tech courses.</p>
+</div>
+</div>
+</div>
+<!-- Template 3 -->
+<div class="carousel-item flex-none w-[85%] sm:w-[60%] md:w-[45%] lg:w-[30%] min-w-[280px]">
+<div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden card-shadow h-full flex flex-col border border-surface-variant">
+<div class="relative overflow-hidden aspect-[4/3] bg-surface-container-low flex items-center justify-center p-4">
+<img alt="Corporate Certificate Design" class="w-full h-auto object-contain shadow-sm transform group-hover:scale-105 transition-transform duration-500" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+<a class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-lg hover:bg-primary/90 flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg" href="#">
+                                Use this template
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1 border-t border-surface-variant bg-white">
+<h4 class="font-headline-sm text-base text-on-surface font-semibold">Corporate Trust</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Bold accents and official layout for formal training.</p>
+</div>
+</div>
+</div>
+<!-- Template 4 -->
+<div class="carousel-item flex-none w-[85%] sm:w-[60%] md:w-[45%] lg:w-[30%] min-w-[280px]">
+<div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden card-shadow h-full flex flex-col border border-surface-variant">
+<div class="relative overflow-hidden aspect-[4/3] bg-surface-container-low flex items-center justify-center p-4">
+<img alt="Creative Certificate Design" class="w-full h-auto object-contain shadow-sm transform group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-T_4aInZ4OiiNWrDs0b4lR9r71sXQqbkIEs_cDQlprtshWgPHkD0Wh1vtX6rJNjD-44a3bLkJs7_7U84zI2LVaoIRahtaKPARi_aA6MPNmXSf8mZRUdpuyb3jj_rFNcXCHfqDvDc2RovzmEDFPRpST0oDmDsffSEIfu69vXUkaywJl3rNFsQlQh-lM4Zs89E8uggjGnNCnbG6WH4qUzVnOw2LKbLDZSV0QTrNrSp-KTUsrZvIwKkU">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+<a class="bg-primary text-on-primary font-label-md px-5 py-2 rounded-lg hover:bg-primary/90 flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg" href="#">
+                                Use this template
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1 border-t border-surface-variant bg-white">
+<h4 class="font-headline-sm text-base text-on-surface font-semibold">Creative Workshop</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Dynamic layouts for design and art achievements.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination Dots -->
+<div class="flex justify-center gap-2 mt-2 pb-4">
+<button aria-label="Go to slide 1" class="w-2 h-2 rounded-full bg-primary"></button>
+<button aria-label="Go to slide 2" class="w-2 h-2 rounded-full bg-outline-variant hover:bg-outline transition-colors"></button>
+<button aria-label="Go to slide 3" class="w-2 h-2 rounded-full bg-outline-variant hover:bg-outline transition-colors"></button>
+<button aria-label="Go to slide 4" class="w-2 h-2 rounded-full bg-outline-variant hover:bg-outline transition-colors"></button>
+</div>
+</section>
+<!-- 1. Certificate Types -->
+<section class="py-stack-md flex flex-col gap-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-background text-center mb-4">What certificate are you creating?</h2>
+<div class="bento-grid">
+<div class="bg-white p-6 rounded-xl card-shadow card-hover transition-all flex items-start gap-4 cursor-pointer border border-outline-variant/30">
+<div class="bg-primary-fixed text-primary p-3 rounded-lg">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Course Completion</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Acknowledge completion of a training program.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl card-shadow card-hover transition-all flex items-start gap-4 cursor-pointer border border-outline-variant/30">
+<div class="bg-secondary-fixed text-secondary p-3 rounded-lg">
+<span class="material-symbols-outlined">work</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Internship</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Formal recognition of practical work experience.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl card-shadow card-hover transition-all flex items-start gap-4 cursor-pointer border border-outline-variant/30">
+<div class="bg-tertiary-fixed text-tertiary p-3 rounded-lg">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Workshop</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Certify attendance at specialized seminars.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl card-shadow card-hover transition-all flex items-start gap-4 cursor-pointer border border-outline-variant/30">
+<div class="bg-surface-container-high text-on-surface p-3 rounded-lg">
+<span class="material-symbols-outlined">emoji_events</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Achievement</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Recognize outstanding performance or milestones.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. How it Works -->
+<section class="py-stack-lg flex flex-col gap-stack-lg bg-surface-container-low -mx-margin-mobile px-margin-mobile md:-mx-margin-desktop md:px-margin-desktop rounded-xl border-t border-b md:border border-outline-variant/30 mt-8">
+<div class="text-center max-w-2xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-4">How it works</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Four simple steps to professional, verifiable credentials.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+<!-- Connecting Line (Desktop) -->
+<div class="hidden md:block absolute top-8 left-[10%] right-[10%] h-0.5 bg-outline-variant z-0"></div>
+<div class="flex flex-col items-center text-center relative z-10 gap-4">
+<div class="w-16 h-16 rounded-full bg-white border-2 border-primary flex items-center justify-center text-primary font-headline-md shadow-sm">
+                        1
+                    </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Create</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Input the recipient details and course information.</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center relative z-10 gap-4">
+<div class="w-16 h-16 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant font-headline-md shadow-sm">
+                        2
+                    </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Design</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Select a template and customize the aesthetic.</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center relative z-10 gap-4">
+<div class="w-16 h-16 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant font-headline-md shadow-sm">
+                        3
+                    </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Generate</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Issue the certificate instantly with a unique ID.</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center relative z-10 gap-4">
+<div class="w-16 h-16 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant font-headline-md shadow-sm">
+                        4
+                    </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Verify</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Anyone can scan the QR to confirm authenticity.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-lg px-margin-mobile md:px-margin-desktop mt-auto bg-surface-container dark:bg-inverse-surface border-t border-surface-variant dark:border-outline-variant">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col items-center md:items-start gap-4">
+<img alt="MyWish Logo" class="h-6 w-auto opacity-80 dark:opacity-100" data-alt="MyWish wordmark logo" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg">
+<span class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant text-sm">© 2024 MYWISH. All rights reserved.</span>
+</div>
+<div class="flex flex-wrap justify-center gap-4">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors opacity-100 hover:opacity-80" href="#">Privacy Policy</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors opacity-100 hover:opacity-80" href="#">Terms of Service</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors opacity-100 hover:opacity-80" href="#">Contact Support</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors opacity-100 hover:opacity-80" href="#">API Documentation</a>
+</div>
+</div>
+</footer>
+<script>
+        // Drawer toggle logic for mobile
+        document.querySelector('[aria-label="Menu"]').addEventListener('click', function() {
+            const overlay = document.getElementById('drawerOverlay');
+            if(overlay.classList.contains('hidden')) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        });
+
+        // Carousel scroll logic
+        function scrollCarousel(direction) {
+            const track = document.getElementById('carouselTrack');
+            const itemWidth = track.querySelector('.carousel-item').offsetWidth + 16; // width + gap
+            track.scrollBy({
+                left: direction * itemWidth,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+
+
+</body></html>

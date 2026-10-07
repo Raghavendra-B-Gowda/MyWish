@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Certificate {
+  id             String   @id // e.g. MW-2026-001245
+  recipientName  String
+  email          String
+  type           String   // 'course' or 'internship'
+  
+  // Company Relation
+  companyId      String?
+  company        Company? @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  
+  // Optional fields based on type
+  courseName     String?
+  internshipRole String?
+  department     String?
+  
+  description    String?  // New field
+  
+  durationValue  String
+  durationType   String   // 'hours' or 'months'
+  
+  directorName   String
+  directorSignature String?
+  directorSignatureFont String @default("Great Vibes")
+  
+  organization   String?
+  
+  studentSignatureMode String @default("manual") // "manual" or "ai"
+  studentSignature     String?
+  
+  issueDate      String
+  completionDate String?
+  
+  templateId       String
+  
+  // Design Options
+  certificateColor String   @default("#FFFFFF")
+  accentColor      String   @default("#1769E0")
+  textColor        String   @default("#152238")
+  font             String   @default("Inter")
+  logoType         String   @default("mywish") // 'mywish' or base64
+  backgroundPattern String  @default("none")
+  backgroundPatterns String?
+  combineWatermarks Boolean @default(false)
+  
+  status         String   @default("Valid") // 'Valid' or 'Revoked'
+  verificationCount Int   @default(0)
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  logo        String?  // base64 or URL
+  website     String?
+  
+  certificates Certificate[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

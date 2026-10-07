@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin/login
+Disallow: /dashboard/
+Disallow: /certificate/success
+Disallow: /verify/*
+
+Sitemap: https://mywish.com/sitemap.xml
