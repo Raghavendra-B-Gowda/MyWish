@@ -78,7 +78,12 @@ export default function VerifyDetail() {
         const encodedData = searchParams.get('d');
         if (encodedData) {
           try {
-            const decoded = JSON.parse(atob(encodedData));
+            // Robust base64 decode: support URL-safe chars and restore missing padding
+            let base64Str = encodedData.replace(/-/g, '+').replace(/_/g, '/');
+            while (base64Str.length % 4) {
+              base64Str += '=';
+            }
+            const decoded = JSON.parse(atob(base64Str));
             setCertData({
               id,
               status: 'ACTIVE',
