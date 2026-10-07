@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { API_URL } from '@/config/api';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -12,8 +13,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   isLoading: false,
   checkAuth: async () => {
+    if (!API_URL) { set({ isAuthenticated: false, isLoading: false }); return; }
     try {
-      const res = await fetch('http://localhost:3000/api/auth/me', { credentials: 'include' });
+      const res = await fetch(`${API_URL}/api/auth/me`, { credentials: 'include' });
       if (res.ok) {
         set({ isAuthenticated: true, isLoading: false });
       } else {
@@ -24,8 +26,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   login: async (password: string) => {
+    if (!API_URL) return false;
     try {
-      const res = await fetch('http://localhost:3000/api/auth/login', {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
@@ -42,7 +45,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   logout: async () => {
     try {
-      await fetch('http://localhost:3000/api/auth/logout', { method: 'POST', credentials: 'include' });
+      if (API_URL) {
+        await fetch(`${API_URL}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+      }
       set({ isAuthenticated: false });
     } catch (e) {
       console.error(e);

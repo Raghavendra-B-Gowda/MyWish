@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { API_URL } from '@/config/api';
 
 export interface Company {
   id: string;
@@ -26,9 +27,10 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
   isLoading: false,
   error: null,
   fetchCompanies: async () => {
+    if (!API_URL) { set({ isLoading: false }); return; }
     set({ isLoading: true, error: null });
     try {
-      const res = await fetch('http://localhost:3000/api/companies', { credentials: 'include' });
+      const res = await fetch(`${API_URL}/api/companies`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch companies');
       const data = await res.json();
       set({ companies: data, isLoading: false });
@@ -37,8 +39,9 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
     }
   },
   addCompany: async (companyData) => {
+    if (!API_URL) return null;
     try {
-      const res = await fetch('http://localhost:3000/api/companies', {
+      const res = await fetch(`${API_URL}/api/companies`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -58,8 +61,9 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
     }
   },
   updateCompany: async (id, companyData) => {
+    if (!API_URL) return false;
     try {
-      const res = await fetch(`http://localhost:3000/api/companies/${id}`, {
+      const res = await fetch(`${API_URL}/api/companies/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -77,8 +81,9 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
     }
   },
   deleteCompany: async (id) => {
+    if (!API_URL) return false;
     try {
-      const res = await fetch(`http://localhost:3000/api/companies/${id}`, {
+      const res = await fetch(`${API_URL}/api/companies/${id}`, {
         method: 'DELETE',
         credentials: 'include'
       });

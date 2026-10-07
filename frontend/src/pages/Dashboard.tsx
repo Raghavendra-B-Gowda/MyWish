@@ -23,6 +23,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsToolti
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "@/config/api";
 
 export default function Dashboard() {
   const [certificates, setCertificates] = useState<any[]>([]);
@@ -39,8 +40,8 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const [certsRes, statsRes] = await Promise.all([
-          fetch('http://localhost:3000/api/certificates', { credentials: 'include' }),
-          fetch('http://localhost:3000/api/stats', { credentials: 'include' })
+          fetch(`${API_URL}/api/certificates`, { credentials: 'include' }),
+          fetch(`${API_URL}/api/stats`, { credentials: 'include' })
         ]);
         
         if (certsRes.status === 401 || statsRes.status === 401) {
@@ -75,7 +76,7 @@ export default function Dashboard() {
     if (!confirm("Are you sure you want to delete this certificate? This action cannot be undone.")) return;
     
     try {
-      const response = await fetch(`http://localhost:3000/api/certificates/${id}`, {
+      const response = await fetch(`${API_URL}/api/certificates/${id}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -95,7 +96,7 @@ export default function Dashboard() {
     if (!confirm("Are you sure you want to block this certificate? It will be marked as invalid forever.")) return;
     
     try {
-      const response = await fetch(`http://localhost:3000/api/certificates/${id}/revoke`, {
+      const response = await fetch(`${API_URL}/api/certificates/${id}/revoke`, {
         method: 'PATCH',
         credentials: 'include'
       });
@@ -115,7 +116,7 @@ export default function Dashboard() {
     if (!confirm("Are you sure you want to unblock this certificate? It will be marked as valid again.")) return;
     
     try {
-      const response = await fetch(`http://localhost:3000/api/certificates/${id}/unrevoke`, {
+      const response = await fetch(`${API_URL}/api/certificates/${id}/unrevoke`, {
         method: 'PATCH',
         credentials: 'include'
       });

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CertificatePreview } from "@/components/certificate/CertificatePreview";
 import { COMPANIES } from "@/components/certificate/CompanyLogo";
 import { useCertificateStore } from "@/store/useCertificateStore";
+import { API_URL } from "@/config/api";
 
 const getCompanyName = (certData: any) => {
   if (certData.company) return certData.company.name;
@@ -56,20 +57,31 @@ export default function VerifyDetail() {
 
   useEffect(() => {
     if (id) {
-      // Query the actual database via backend
-      fetch(`http://localhost:3000/api/certificates/${id}`)
-        .then(res => {
-          if (!res.ok) throw new Error("Not found");
-          return res.json();
-        })
-        .then(data => {
-          setCertData(data);
-          setLoading(false);
-        })
-        .catch(() => {
+      if (API_URL) {
+        // Query the actual database via backend
+        fetch(`${API_URL}/api/certificates/${id}`)
+          .then(res => {
+            if (!res.ok) throw new Error("Not found");
+            return res.json();
+          })
+          .then(data => {
+            setCertData(data);
+            setLoading(false);
+          })
+          .catch(() => {
+            setError(true);
+            setLoading(false);
+          });
+      } else {
+        // No backend: show a generic verified state using the store data
+        const storeData = useCertificateStore.getState().data;
+        if (storeData.recipientName) {
+          setCertData({ ...storeData, id, status: 'ACTIVE' });
+        } else {
           setError(true);
-          setLoading(false);
-        });
+        }
+        setLoading(false);
+      }
     }
   }, [id]);
 
