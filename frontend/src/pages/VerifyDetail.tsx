@@ -78,7 +78,7 @@ export default function VerifyDetail() {
         const encodedData = searchParams.get('d');
         if (encodedData) {
           try {
-            const decoded = JSON.parse(atob(encodedData.replace(/-/g, '+').replace(/_/g, '/')));
+            const decoded = JSON.parse(atob(encodedData));
             setCertData({
               id,
               status: 'ACTIVE',
