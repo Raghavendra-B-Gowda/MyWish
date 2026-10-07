@@ -3,6 +3,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { CompanyLogo, COMPANIES } from "./CompanyLogo";
 import { CertificateBadge } from "./CertificateBadge";
 import { SEO_CONFIG } from "@/config/seo";
+import { generateVerificationUrl } from "@/utils/verification";
 
 export function CertificatePreview({ demo = false, overrideData }: { demo?: boolean, overrideData?: any }) {
   const store = useCertificateStore();
@@ -11,8 +12,7 @@ export function CertificatePreview({ demo = false, overrideData }: { demo?: bool
   const certId = demo ? "MW-2026-DEMO" : generatedId || "MW-2026-XXXXXX";
   
   // Verification URL to be encoded in the QR code (strictly use current browser origin)
-  const domain = typeof window !== 'undefined' ? window.location.origin : "https://mywish-eta.vercel.app";
-  const verificationUrl = `${domain}/verify/${certId}`;
+  const verificationUrl = generateVerificationUrl(certId, data);
 
   // Shared content helpers
   const DateBlock = ({ date, label }: { date: string, label: string }) => (

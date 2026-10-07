@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { CheckCircle2, XCircle, Download, Share2, Loader2, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ const getCompanyName = (certData: any) => {
 
 export default function VerifyDetail() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const [certData, setCertData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -73,7 +74,31 @@ export default function VerifyDetail() {
             setLoading(false);
           });
       } else {
-        // No backend: show a generic verified state using the store data
+        // No backend: try to decode data from URL, fallback to local store
+        const encodedData = searchParams.get('d');
+        if (encodedData) {
+          try {
+            const decoded = JSON.parse(atob(encodedData.replace(/-/g, '+').replace(/_/g, '/')));
+            setCertData({
+              id,
+              status: 'ACTIVE',
+              recipientName: decoded.n,
+              type: decoded.t,
+              courseName: decoded.t === 'course' ? decoded.c : undefined,
+              internshipRole: decoded.t === 'internship' ? decoded.c : undefined,
+              issueDate: decoded.i,
+              organization: decoded.o,
+              logoType: decoded.l,
+              templateId: decoded.tm
+            });
+            setLoading(false);
+            return;
+          } catch (e) {
+            console.error("Failed to decode offline certificate data");
+          }
+        }
+        
+        // Final fallback: try local store (only works if same device & tab)
         const storeData = useCertificateStore.getState().data;
         if (storeData.recipientName) {
           setCertData({ ...storeData, id, status: 'ACTIVE' });
@@ -83,7 +108,7 @@ export default function VerifyDetail() {
         setLoading(false);
       }
     }
-  }, [id]);
+  }, [id, searchParams]);
 
   // Once cert data is loaded, reveal the company branding
   useEffect(() => {

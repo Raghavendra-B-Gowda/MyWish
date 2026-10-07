@@ -12,6 +12,7 @@ import { useCompanyStore } from "@/store/useCompanyStore";
 import { COMPANIES } from "@/components/certificate/CompanyLogo";
 const STEPS = ["Details", "Signatures", "Design", "Preview", "Download"];
 const FONTS = ["Inter", "Playfair Display", "Roboto Mono", "Merriweather", "Outfit", "Lora", "Montserrat", "Cinzel"];
+import { generateVerificationUrl } from "@/utils/verification";
 
 export default function Create() {
   const [searchParams] = useSearchParams();
@@ -78,8 +79,8 @@ export default function Create() {
   // Copy link state
   const [copied, setCopied] = useState(false);
   const handleCopyLink = () => {
-    const domain = window.location.origin;
-    navigator.clipboard.writeText(`${domain}/verify/${generatedId}`);
+    const verificationUrl = generateVerificationUrl(generatedId || "", data);
+    navigator.clipboard.writeText(verificationUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -700,9 +701,9 @@ export default function Create() {
                   className="h-11 px-5 gap-2 bg-primary hover:bg-primary/90 text-white font-medium w-full sm:w-auto"
                   asChild
                 >
-                  <Link to={`/verify/${generatedId}`} target="_blank">
+                  <a href={generateVerificationUrl(generatedId || "", data)} target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="w-4 h-4" /> View Verification
-                  </Link>
+                  </a>
                 </Button>
               </div>
             </div>
