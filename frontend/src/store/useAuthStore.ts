@@ -27,7 +27,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   login: async (password: string) => {
     if (!API_URL) {
-      if (password === 'Raghu822007@bro') {
+      if (password === 'Raghu822007@') {
         set({ isAuthenticated: true });
         return true;
       }
