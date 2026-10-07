@@ -2,7 +2,6 @@ import { useCertificateStore } from "@/store/useCertificateStore";
 import { QRCodeSVG } from "qrcode.react";
 import { CompanyLogo, COMPANIES } from "./CompanyLogo";
 import { CertificateBadge } from "./CertificateBadge";
-import { SEO_CONFIG } from "@/config/seo";
 import { generateVerificationUrl } from "@/utils/verification";
 
 export function CertificatePreview({ demo = false, overrideData }: { demo?: boolean, overrideData?: any }) {

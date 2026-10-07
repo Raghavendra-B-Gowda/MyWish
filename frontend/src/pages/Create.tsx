@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CheckCircle2, ChevronRight, Loader2, Sparkles, Download, Image, FileText, ExternalLink, Award, GraduationCap, Building2, Grid3X3, AlignJustify, Waves, Shapes } from "lucide-react";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { TEMPLATES } from "@/config/templates";
 import { useCompanyStore } from "@/store/useCompanyStore";
 import { COMPANIES } from "@/components/certificate/CompanyLogo";
