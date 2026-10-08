@@ -58,16 +58,18 @@ export default function VerifyDetail() {
 
   useEffect(() => {
     if (id) {
-      // Query the actual database via Supabase
-      supabase
-        .from('Certificate')
-        .select(`
-          *,
-          company:Company(*)
-        `)
-        .eq('id', id)
-        .single()
-        .then(({ data, error: dbError }) => {
+      const fetchCert = async () => {
+        try {
+          // Query the actual database via Supabase
+          const { data, error: dbError } = await supabase
+            .from('Certificate')
+            .select(`
+              *,
+              company:Company(*)
+            `)
+            .eq('id', id)
+            .single();
+
           if (dbError || !data) {
             throw new Error("Not found");
           }
@@ -77,49 +79,54 @@ export default function VerifyDetail() {
           if (typeof parsedData.backgroundPatterns === 'string') {
             try {
               parsedData.backgroundPatterns = JSON.parse(parsedData.backgroundPatterns);
-            } catch(e) {}
+            } catch {
+              // Ignore parse error
+            }
           }
           
           setCertData(parsedData);
           setLoading(false);
           
           // Optionally increment verification count
-          supabase.rpc('increment_verification', { cert_id: id }).catch(() => {});
-        })
-        .catch(() => {
+          try {
+            await supabase.rpc('increment_verification', { cert_id: id });
+          } catch {
+            // Ignore error if RPC doesn't exist
+          }
+        } catch {
           // No backend: try to decode data from URL, fallback to local store
           const encodedData = searchParams.get('d');
-        if (encodedData) {
-          try {
-            // Robust base64 decode: support URL-safe chars and restore missing padding
-            let base64Str = encodedData.replace(/-/g, '+').replace(/_/g, '/');
-            while (base64Str.length % 4) {
-              base64Str += '=';
+          if (encodedData) {
+            try {
+              // Robust base64 decode: support URL-safe chars and restore missing padding
+              let base64Str = encodedData.replace(/-/g, '+').replace(/_/g, '/');
+              while (base64Str.length % 4) {
+                base64Str += '=';
+              }
+              const decoded = JSON.parse(atob(base64Str));
+              setCertData({
+                id,
+                status: 'ACTIVE',
+                recipientName: decoded.n,
+                type: decoded.t,
+                courseName: decoded.t === 'course' ? decoded.c : undefined,
+                internshipRole: decoded.t === 'internship' ? decoded.c : undefined,
+                issueDate: decoded.i,
+                organization: decoded.o,
+                logoType: decoded.l,
+                templateId: decoded.tm,
+                email: decoded.e || "N/A",
+                durationValue: decoded.dv || "1",
+                durationType: decoded.dt || "months",
+                directorName: decoded.dn || "Director"
+              });
+              setLoading(false);
+              return;
+            } catch (_err) {
+              console.error("Failed to decode offline certificate data");
             }
-            const decoded = JSON.parse(atob(base64Str));
-            setCertData({
-              id,
-              status: 'ACTIVE',
-              recipientName: decoded.n,
-              type: decoded.t,
-              courseName: decoded.t === 'course' ? decoded.c : undefined,
-              internshipRole: decoded.t === 'internship' ? decoded.c : undefined,
-              issueDate: decoded.i,
-              organization: decoded.o,
-              logoType: decoded.l,
-              templateId: decoded.tm,
-              email: decoded.e || "N/A",
-              durationValue: decoded.dv || "1",
-              durationType: decoded.dt || "months",
-              directorName: decoded.dn || "Director"
-            });
-            setLoading(false);
-            return;
-          } catch (e) {
-            console.error("Failed to decode offline certificate data");
           }
-        }
-        
+          
           // Final fallback: try local store (only works if same device & tab)
           const storeData = useCertificateStore.getState().data;
           if (storeData.recipientName) {
@@ -128,7 +135,10 @@ export default function VerifyDetail() {
             setError(true);
           }
           setLoading(false);
-        });
+        }
+      };
+
+      fetchCert();
     }
   }, [id, searchParams]);
 

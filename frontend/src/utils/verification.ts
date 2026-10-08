@@ -32,7 +32,7 @@ export const generateVerificationUrl = (certId: string, data?: any) => {
       // Create a compact base64 string and safely URL-encode it
       const base64Str = btoa(JSON.stringify(minimalData));
       return `${baseUrl}?d=${encodeURIComponent(base64Str)}`;
-    } catch (e) {
+    } catch (_err) {
       console.warn("Failed to encode certificate data for offline verification");
     }
   }

@@ -135,7 +135,7 @@ export const useCertificateStore = create<CertificateStore>((set, get) => ({
         .join('');
       const localId = `MW-${year}-${randomHex}`;
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('Certificate')
         .insert([{ id: localId, status: 'Valid', ...dataToSubmit }]);
 
