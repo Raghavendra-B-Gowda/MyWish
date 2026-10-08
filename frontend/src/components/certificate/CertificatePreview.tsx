@@ -6,7 +6,18 @@ import { generateVerificationUrl } from "@/utils/verification";
 
 export function CertificatePreview({ demo = false, overrideData }: { demo?: boolean, overrideData?: any }) {
   const store = useCertificateStore();
-  const data = overrideData || store.data;
+  
+  // Clean null values from overrideData so they don't overwrite store defaults with nulls
+  const cleanedOverride = overrideData ? { ...overrideData } : null;
+  if (cleanedOverride) {
+    Object.keys(cleanedOverride).forEach(key => {
+      if (cleanedOverride[key] === null) {
+        delete cleanedOverride[key];
+      }
+    });
+  }
+  
+  const data = cleanedOverride ? { ...store.data, ...cleanedOverride } : store.data;
   const generatedId = store.generatedId;
   const certId = demo ? "MW-2026-DEMO" : (overrideData?.id || generatedId || "MW-2026-XXXXXX");
   
