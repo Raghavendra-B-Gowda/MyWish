@@ -102,6 +102,7 @@ export default function Dashboard() {
       
       if (!error) {
         setCertificates(prev => prev.filter(cert => cert.id !== id));
+        if (previewCert?.id === id) setPreviewCert(null);
       } else {
         alert("Failed to delete certificate.");
       }
@@ -119,6 +120,7 @@ export default function Dashboard() {
       
       if (!error) {
         setCertificates(prev => prev.map(cert => cert.id === id ? { ...cert, status: 'Revoked' } : cert));
+        if (previewCert?.id === id) setPreviewCert({ ...previewCert, status: 'Revoked' });
       } else {
         alert("Failed to block certificate.");
       }
@@ -136,6 +138,7 @@ export default function Dashboard() {
       
       if (!error) {
         setCertificates(prev => prev.map(cert => cert.id === id ? { ...cert, status: 'Valid' } : cert));
+        if (previewCert?.id === id) setPreviewCert({ ...previewCert, status: 'Valid' });
       } else {
         alert("Failed to unblock certificate.");
       }
@@ -524,6 +527,21 @@ export default function Dashboard() {
                 <Button variant="outline" className="bg-[#121217] text-white hover:bg-[#1A1A22] border-border/10" asChild>
                   <Link to={`/verify/${previewCert.id}`} target="_blank">Open Public Page</Link>
                 </Button>
+                
+                {previewCert.status === 'Revoked' ? (
+                  <Button variant="outline" className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border-emerald-500/20" onClick={() => handleUnblock(previewCert.id)}>
+                    <CheckCircle className="w-4 h-4 mr-2" /> Unblock
+                  </Button>
+                ) : (
+                  <Button variant="outline" className="bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 border-orange-500/20" onClick={() => handleRevoke(previewCert.id)}>
+                    <Ban className="w-4 h-4 mr-2" /> Block
+                  </Button>
+                )}
+                
+                <Button variant="outline" className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border-red-500/20" onClick={() => handleDelete(previewCert.id)}>
+                  <Trash2 className="w-4 h-4 mr-2" /> Delete
+                </Button>
+                
                 <Button className="bg-[#121217] text-slate-300 hover:text-white border-none" variant="outline" onClick={() => setPreviewCert(null)}>Close</Button>
               </div>
             </div>
