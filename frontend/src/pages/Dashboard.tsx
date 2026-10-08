@@ -23,9 +23,9 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsToolti
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "@/config/api";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { CertificatePreview } from "@/components/certificate/CertificatePreview";
+import { supabase } from "@/lib/supabase";
 
 export default function Dashboard() {
   const [certificates, setCertificates] = useState<any[]>([]);
@@ -55,26 +55,32 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [certsRes, statsRes] = await Promise.all([
-          fetch(`${API_URL}/api/certificates`, { credentials: 'include' }),
-          fetch(`${API_URL}/api/stats`, { credentials: 'include' })
-        ]);
+        const { data: certsData, error: certsError } = await supabase
+          .from('Certificate')
+          .select('*')
+          .order('issueDate', { ascending: false });
+
+        if (certsError) throw certsError;
         
-        if (certsRes.status === 401 || statsRes.status === 401) {
-          await logout();
-          navigate("/admin/login");
-          return;
-        }
-        
-        if (certsRes.ok) setCertificates(await certsRes.json());
-        if (statsRes.ok) {
-          const s = await statsRes.json();
-          setStats({ ...s, templates: 1 }); // Mocking templates for demo
+        if (certsData) {
+          setCertificates(certsData);
+          
+          const valid = certsData.filter(c => c.status === 'Valid').length;
+          const revoked = certsData.filter(c => c.status === 'Revoked').length;
+          
+          setStats({
+            total: certsData.length,
+            valid,
+            revoked,
+            templates: 1, // mock
+            verifications: 0, // mock
+            recentCertificates: certsData.map(c => c.issueDate)
+          });
         }
       } catch (error) {
-        console.error("Failed to fetch dashboard data", error);
+        console.error("Failed to fetch dashboard data from Supabase", error);
         
-        // Mock data fallback if backend is down
+        // Mock data fallback if database fails
         setCertificates([
           { id: "MW-2026-AI0018", recipientName: "Raghavendra Gowda", type: "course", courseName: "AI & ML", templateId: "modern-dark", issueDate: "Aug 17, 2026", status: "Valid" },
           { id: "MW-2026-AI0017", recipientName: "Ragu Louda", type: "course", courseName: "AI & ML", templateId: "modern-dark", issueDate: "Aug 17, 2026", status: "Valid" },
@@ -92,12 +98,9 @@ export default function Dashboard() {
     if (!confirm("Are you sure you want to delete this certificate? This action cannot be undone.")) return;
     
     try {
-      const response = await fetch(`${API_URL}/api/certificates/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
+      const { error } = await supabase.from('Certificate').delete().eq('id', id);
       
-      if (response.ok) {
+      if (!error) {
         setCertificates(prev => prev.filter(cert => cert.id !== id));
       } else {
         alert("Failed to delete certificate.");
@@ -112,12 +115,9 @@ export default function Dashboard() {
     if (!confirm("Are you sure you want to block this certificate? It will be marked as invalid forever.")) return;
     
     try {
-      const response = await fetch(`${API_URL}/api/certificates/${id}/revoke`, {
-        method: 'PATCH',
-        credentials: 'include'
-      });
+      const { error } = await supabase.from('Certificate').update({ status: 'Revoked' }).eq('id', id);
       
-      if (response.ok) {
+      if (!error) {
         setCertificates(prev => prev.map(cert => cert.id === id ? { ...cert, status: 'Revoked' } : cert));
       } else {
         alert("Failed to block certificate.");
@@ -132,12 +132,9 @@ export default function Dashboard() {
     if (!confirm("Are you sure you want to unblock this certificate? It will be marked as valid again.")) return;
     
     try {
-      const response = await fetch(`${API_URL}/api/certificates/${id}/unrevoke`, {
-        method: 'PATCH',
-        credentials: 'include'
-      });
+      const { error } = await supabase.from('Certificate').update({ status: 'Valid' }).eq('id', id);
       
-      if (response.ok) {
+      if (!error) {
         setCertificates(prev => prev.map(cert => cert.id === id ? { ...cert, status: 'Valid' } : cert));
       } else {
         alert("Failed to unblock certificate.");
