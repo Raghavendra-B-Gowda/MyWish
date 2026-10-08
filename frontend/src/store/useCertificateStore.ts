@@ -137,7 +137,12 @@ export const useCertificateStore = create<CertificateStore>((set, get) => ({
 
       const { error } = await supabase
         .from('Certificate')
-        .insert([{ id: localId, status: 'Valid', ...dataToSubmit }]);
+        .insert([{ 
+          id: localId, 
+          status: 'Valid', 
+          updatedAt: new Date().toISOString(),
+          ...dataToSubmit 
+        }]);
 
       if (error) {
         console.error("Supabase insert error:", error);

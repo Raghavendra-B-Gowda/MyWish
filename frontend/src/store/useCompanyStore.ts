@@ -45,7 +45,10 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
     try {
       const { data, error } = await supabase
         .from('Company')
-        .insert([companyData])
+        .insert([{
+          ...companyData,
+          updatedAt: new Date().toISOString()
+        }])
         .select()
         .single();
         
@@ -65,7 +68,10 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
     try {
       const { data, error } = await supabase
         .from('Company')
-        .update(companyData)
+        .update({
+          ...companyData,
+          updatedAt: new Date().toISOString()
+        })
         .eq('id', id)
         .select()
         .single();
