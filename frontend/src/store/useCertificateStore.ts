@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { API_URL } from '@/config/api';
+import { supabase } from '@/lib/supabase';
 
 export type DurationType = 'hours' | 'months';
 export type CertificateType = 'course' | 'internship';
@@ -43,7 +43,7 @@ export interface CertificateData {
   image?: string;
   showBadge?: boolean;
   badgeType?: 'seal' | 'academic' | 'none';
-  backgroundPattern?: string; // Keep for backward compatibility
+  backgroundPattern?: string;
   backgroundPatterns?: string[];
   combineWatermarks?: boolean;
 }
@@ -107,47 +107,51 @@ export const useCertificateStore = create<CertificateStore>((set, get) => ({
     try {
       const currentData = get().data;
       
-      // Ensure required fields have valid data
-      const dataToSubmit = {
+      const dataToSubmit: any = {
         ...currentData,
         recipientName: currentData.recipientName || "Demo Student",
         email: currentData.email || "demo@example.com",
         durationValue: currentData.durationValue || "1"
       };
 
-      // Try backend first, fall back to local generation
-      if (API_URL) {
-        try {
-          const response = await fetch(`${API_URL}/api/certificates`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(dataToSubmit)
-          });
-          
-          if (response.ok) {
-            const result = await response.json();
-            set({ generatedId: result.id, isLoading: false });
-            return true;
-          }
-        } catch {
-          // Backend unavailable, fall through to local generation
-          console.warn("Backend unavailable, generating certificate locally.");
-        }
+      // Convert arrays to JSON strings for Prisma/Supabase compatibility if needed
+      if (dataToSubmit.backgroundPatterns) {
+        dataToSubmit.backgroundPatterns = JSON.stringify(dataToSubmit.backgroundPatterns);
       }
+      
+      // Clean up frontend-only fields
+      delete dataToSubmit.image;
+      delete dataToSubmit.showBadge;
+      delete dataToSubmit.badgeType;
+      
+      // Replace undefined with null
+      Object.keys(dataToSubmit).forEach(key => {
+        if (dataToSubmit[key] === undefined) dataToSubmit[key] = null;
+      });
 
-      // Local fallback: generate a unique certificate ID
       const year = new Date().getFullYear();
       const randomHex = Array.from(crypto.getRandomValues(new Uint8Array(3)))
         .map(b => b.toString(16).padStart(2, '0').toUpperCase())
         .join('');
       const localId = `MW-${year}-${randomHex}`;
-      
+
+      const { data, error } = await supabase
+        .from('Certificate')
+        .insert([{ id: localId, status: 'Valid', ...dataToSubmit }]);
+
+      if (error) {
+        console.error("Supabase insert error:", error);
+        throw new Error(error.message);
+      }
+
       set({ generatedId: localId, isLoading: false });
       return true;
     } catch (err: any) {
       console.error("Certificate generation failed:", err);
-      set({ error: err.message || "Failed to generate certificate", isLoading: false });
+      // Fallback for offline mode if Supabase fails (e.g. RLS errors)
+      const year = new Date().getFullYear();
+      const localId = `MW-${year}-XXXX`;
+      set({ generatedId: localId, isLoading: false, error: err.message });
       return false;
     }
   }

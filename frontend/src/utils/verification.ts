@@ -23,7 +23,11 @@ export const generateVerificationUrl = (certId: string, data?: any) => {
         i: data.issueDate,
         o: data.organization,
         l: data.logoType,
-        tm: data.templateId
+        tm: data.templateId,
+        e: data.email,
+        dv: data.durationValue,
+        dt: data.durationType,
+        dn: data.directorName
       };
       // Create a compact base64 string and safely URL-encode it
       const base64Str = btoa(JSON.stringify(minimalData));

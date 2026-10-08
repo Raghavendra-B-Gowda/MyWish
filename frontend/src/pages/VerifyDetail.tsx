@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CertificatePreview } from "@/components/certificate/CertificatePreview";
 import { COMPANIES } from "@/components/certificate/CompanyLogo";
 import { useCertificateStore } from "@/store/useCertificateStore";
-import { API_URL } from "@/config/api";
+import { supabase } from "@/lib/supabase";
 
 const getCompanyName = (certData: any) => {
   if (certData.company) return certData.company.name;
@@ -58,24 +58,37 @@ export default function VerifyDetail() {
 
   useEffect(() => {
     if (id) {
-      if (API_URL) {
-        // Query the actual database via backend
-        fetch(`${API_URL}/api/certificates/${id}`)
-          .then(res => {
-            if (!res.ok) throw new Error("Not found");
-            return res.json();
-          })
-          .then(data => {
-            setCertData(data);
-            setLoading(false);
-          })
-          .catch(() => {
-            setError(true);
-            setLoading(false);
-          });
-      } else {
-        // No backend: try to decode data from URL, fallback to local store
-        const encodedData = searchParams.get('d');
+      // Query the actual database via Supabase
+      supabase
+        .from('Certificate')
+        .select(`
+          *,
+          company:Company(*)
+        `)
+        .eq('id', id)
+        .single()
+        .then(({ data, error: dbError }) => {
+          if (dbError || !data) {
+            throw new Error("Not found");
+          }
+          
+          // Parse JSON strings if necessary
+          let parsedData = { ...data };
+          if (typeof parsedData.backgroundPatterns === 'string') {
+            try {
+              parsedData.backgroundPatterns = JSON.parse(parsedData.backgroundPatterns);
+            } catch(e) {}
+          }
+          
+          setCertData(parsedData);
+          setLoading(false);
+          
+          // Optionally increment verification count
+          supabase.rpc('increment_verification', { cert_id: id }).catch(() => {});
+        })
+        .catch(() => {
+          // No backend: try to decode data from URL, fallback to local store
+          const encodedData = searchParams.get('d');
         if (encodedData) {
           try {
             // Robust base64 decode: support URL-safe chars and restore missing padding
@@ -94,7 +107,11 @@ export default function VerifyDetail() {
               issueDate: decoded.i,
               organization: decoded.o,
               logoType: decoded.l,
-              templateId: decoded.tm
+              templateId: decoded.tm,
+              email: decoded.e || "N/A",
+              durationValue: decoded.dv || "1",
+              durationType: decoded.dt || "months",
+              directorName: decoded.dn || "Director"
             });
             setLoading(false);
             return;
@@ -103,15 +120,15 @@ export default function VerifyDetail() {
           }
         }
         
-        // Final fallback: try local store (only works if same device & tab)
-        const storeData = useCertificateStore.getState().data;
-        if (storeData.recipientName) {
-          setCertData({ ...storeData, id, status: 'ACTIVE' });
-        } else {
-          setError(true);
-        }
-        setLoading(false);
-      }
+          // Final fallback: try local store (only works if same device & tab)
+          const storeData = useCertificateStore.getState().data;
+          if (storeData.recipientName) {
+            setCertData({ ...storeData, id, status: 'ACTIVE' });
+          } else {
+            setError(true);
+          }
+          setLoading(false);
+        });
     }
   }, [id, searchParams]);
 
@@ -322,7 +339,7 @@ export default function VerifyDetail() {
 
               <div>
                 <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Email</p>
-                <p className="font-medium text-slate-600">{certData.email.replace(/(.{2})(.*)(?=@)/, "$1********")}</p>
+                <p className="font-medium text-slate-600">{certData.email && certData.email !== "N/A" ? certData.email.replace(/(.{2})(.*)(?=@)/, "$1********") : "N/A"}</p>
               </div>
               <div>
                 <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Issue Date</p>

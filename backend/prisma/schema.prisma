@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,7 +15,7 @@ model Certificate {
   
   // Company Relation
   companyId      String?
-  company        Company? @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  company        Company? @relation(fields: [companyId], references: [id])
   
   // Optional fields based on type
   courseName     String?
