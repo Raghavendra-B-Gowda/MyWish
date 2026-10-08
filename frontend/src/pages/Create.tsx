@@ -605,8 +605,8 @@ export default function Create() {
             >
               <div 
                 id="certificate-preview-root" 
-                className="w-[850px] aspect-[1.414/1] origin-top-left absolute top-0 left-0 bg-white"
-                style={{ transform: `scale(${previewScale})` }}
+                className="w-[850px] aspect-[1.414/1] origin-top bg-white absolute top-0 left-1/2"
+                style={{ transform: `scale(${previewScale})`, marginLeft: '-425px' }}
               >
                 <CertificatePreview />
               </div>
@@ -656,8 +656,8 @@ export default function Create() {
             >
               <div 
                 id="certificate-preview-root" 
-                className="w-[850px] aspect-[1.414/1] origin-top-left absolute top-0 left-0 bg-white"
-                style={{ transform: `scale(${previewScale})` }}
+                className="w-[850px] aspect-[1.414/1] origin-top bg-white absolute top-0 left-1/2"
+                style={{ transform: `scale(${previewScale})`, marginLeft: '-425px' }}
               >
                 <CertificatePreview />
               </div>

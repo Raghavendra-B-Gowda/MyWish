@@ -283,13 +283,13 @@ export default function VerifyDetail() {
         <div className="bg-white border border-border p-4 md:p-8 flex justify-center rounded-2xl shadow-sm relative">
           <div 
             ref={previewWrapperRef}
-            className="w-full shadow-2xl rounded-xl overflow-hidden ring-1 ring-border relative"
+            className="w-full max-w-4xl mx-auto shadow-2xl rounded-xl overflow-hidden ring-1 ring-border relative"
             style={{ height: 850 / 1.414 * previewScale }}
           >
             <div 
               id="verification-certificate-preview" 
-              className={`w-[850px] aspect-[1.414/1] origin-top-left absolute top-0 left-0 bg-white ${isRevoked ? 'blur-lg opacity-30 select-none pointer-events-none' : ''}`}
-              style={{ transform: `scale(${previewScale})` }}
+              className={`w-[850px] aspect-[1.414/1] origin-top bg-white absolute top-0 left-1/2 ${isRevoked ? 'blur-lg opacity-30 select-none pointer-events-none' : ''}`}
+              style={{ transform: `scale(${previewScale})`, marginLeft: '-425px' }}
             >
               <CertificatePreview overrideData={isRevoked ? { ...certData, recipientName: "REDACTED", email: "REDACTED", courseName: "REDACTED", internshipRole: "REDACTED", directorName: "REDACTED" } : certData} />
             </div>

@@ -24,6 +24,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsToolti
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "@/config/api";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { CertificatePreview } from "@/components/certificate/CertificatePreview";
 
 export default function Dashboard() {
   const [certificates, setCertificates] = useState<any[]>([]);
@@ -32,9 +34,23 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("All");
   const [chartRange, setChartRange] = useState("This Week");
+  const [previewCert, setPreviewCert] = useState<any>(null);
+  const [previewScale, setPreviewScale] = useState(1);
   
   const logout = useAuthStore(s => s.logout);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const updateScale = () => {
+      // 850 is the original width, calculate how much to scale down based on window width
+      const maxAvailableWidth = Math.min(window.innerWidth - 64, 850); 
+      setPreviewScale(maxAvailableWidth / 850);
+    };
+    
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [previewCert]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -439,8 +455,8 @@ export default function Dashboard() {
                     </td>
                     <td className="px-5 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white" asChild>
-                          <Link to={`/verify/${cert.id}`} title="View"><Eye className="w-4 h-4" /></Link>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white" onClick={() => setPreviewCert(cert)} title="View">
+                          <Eye className="w-4 h-4" />
                         </Button>
                         
                         {cert.status === 'Revoked' ? (
@@ -479,6 +495,44 @@ export default function Dashboard() {
           <Link to="/create">Create Certificate <ChevronRight className="w-4 h-4 ml-2" /></Link>
         </Button>
       </div>
+
+      {/* Preview Modal */}
+      <Dialog open={!!previewCert} onOpenChange={(open) => !open && setPreviewCert(null)}>
+        <DialogContent className="max-w-4xl bg-transparent border-0 shadow-none p-0 sm:max-w-4xl" showCloseButton={false}>
+          {previewCert && (
+            <div className="flex flex-col gap-4 items-center animate-in fade-in zoom-in-95 duration-200">
+              <div 
+                className="w-full shadow-2xl rounded-2xl overflow-hidden ring-1 ring-border relative"
+                style={{ height: 850 / 1.414 * previewScale }}
+              >
+                <div 
+                  className={`w-[850px] aspect-[1.414/1] origin-top absolute top-0 left-1/2 bg-white ${previewCert.status === 'Revoked' ? 'blur-lg opacity-30 select-none pointer-events-none' : ''}`}
+                  style={{ transform: `scale(${previewScale})`, marginLeft: '-425px' }}
+                >
+                  <CertificatePreview overrideData={previewCert.status === 'Revoked' ? { ...previewCert, recipientName: "REDACTED", email: "REDACTED", courseName: "REDACTED", internshipRole: "REDACTED", directorName: "REDACTED" } : previewCert} />
+                </div>
+                
+                {previewCert.status === 'Revoked' && (
+                  <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm p-4 text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-red-50 text-red-500 shadow-xl">
+                      <XCircle className="w-8 h-8" />
+                    </div>
+                    <h1 className="text-3xl font-black tracking-tight mb-2 text-red-600 uppercase drop-shadow-md">
+                      Certificate Revoked
+                    </h1>
+                  </div>
+                )}
+              </div>
+              <div className="flex gap-4 w-full justify-center">
+                <Button variant="outline" className="bg-[#121217] text-white hover:bg-[#1A1A22] border-border/10" asChild>
+                  <Link to={`/verify/${previewCert.id}`} target="_blank">Open Public Page</Link>
+                </Button>
+                <Button className="bg-[#121217] text-slate-300 hover:text-white border-none" variant="outline" onClick={() => setPreviewCert(null)}>Close</Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
     </div>
   );
