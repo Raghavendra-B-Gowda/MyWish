@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   PlusCircle, 
   FileText, 
@@ -22,8 +22,6 @@ import { Input } from "@/components/ui/input";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 import { useAuthStore } from "@/store/useAuthStore";
-import { useNavigate } from "react-router-dom";
-import { CertificatePreview } from "@/components/certificate/CertificatePreview";
 import { supabase } from "@/lib/supabase";
 
 export default function Dashboard() {
