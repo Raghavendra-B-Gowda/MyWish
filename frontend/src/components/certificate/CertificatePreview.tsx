@@ -8,7 +8,7 @@ export function CertificatePreview({ demo = false, overrideData }: { demo?: bool
   const store = useCertificateStore();
   const data = overrideData || store.data;
   const generatedId = store.generatedId;
-  const certId = demo ? "MW-2026-DEMO" : generatedId || "MW-2026-XXXXXX";
+  const certId = demo ? "MW-2026-DEMO" : (overrideData?.id || generatedId || "MW-2026-XXXXXX");
   
   // Verification URL to be encoded in the QR code (strictly use current browser origin)
   const verificationUrl = generateVerificationUrl(certId, data);

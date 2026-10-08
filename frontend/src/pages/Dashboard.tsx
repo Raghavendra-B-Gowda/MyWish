@@ -23,7 +23,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsToolti
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { CertificatePreview } from "@/components/certificate/CertificatePreview";
 import { supabase } from "@/lib/supabase";
 
@@ -497,57 +496,57 @@ export default function Dashboard() {
       </div>
 
       {/* Preview Modal */}
-      <Dialog open={!!previewCert} onOpenChange={(open) => !open && setPreviewCert(null)}>
-        <DialogContent className="max-w-4xl bg-transparent border-0 shadow-none p-0 sm:max-w-4xl" showCloseButton={false}>
-          {previewCert && (
-            <div className="flex flex-col gap-4 items-center animate-in fade-in zoom-in-95 duration-200">
+      {previewCert && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 md:p-8 animate-in fade-in duration-200" onClick={(e) => {
+          if (e.target === e.currentTarget) setPreviewCert(null);
+        }}>
+          <div className="flex flex-col gap-4 items-center animate-in fade-in zoom-in-95 duration-200 w-full max-w-4xl">
+            <div 
+              className="w-full shadow-2xl rounded-2xl overflow-hidden ring-1 ring-border relative"
+              style={{ height: 850 / 1.414 * previewScale }}
+            >
               <div 
-                className="w-full shadow-2xl rounded-2xl overflow-hidden ring-1 ring-border relative"
-                style={{ height: 850 / 1.414 * previewScale }}
+                className={`w-[850px] aspect-[1.414/1] origin-top absolute top-0 left-1/2 bg-white ${previewCert.status === 'Revoked' ? 'blur-lg opacity-30 select-none pointer-events-none' : ''}`}
+                style={{ transform: `scale(${previewScale})`, marginLeft: '-425px' }}
               >
-                <div 
-                  className={`w-[850px] aspect-[1.414/1] origin-top absolute top-0 left-1/2 bg-white ${previewCert.status === 'Revoked' ? 'blur-lg opacity-30 select-none pointer-events-none' : ''}`}
-                  style={{ transform: `scale(${previewScale})`, marginLeft: '-425px' }}
-                >
-                  <CertificatePreview overrideData={previewCert.status === 'Revoked' ? { ...previewCert, recipientName: "REDACTED", email: "REDACTED", courseName: "REDACTED", internshipRole: "REDACTED", directorName: "REDACTED" } : previewCert} />
-                </div>
-                
-                {previewCert.status === 'Revoked' && (
-                  <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm p-4 text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-red-50 text-red-500 shadow-xl">
-                      <XCircle className="w-8 h-8" />
-                    </div>
-                    <h1 className="text-3xl font-black tracking-tight mb-2 text-red-600 uppercase drop-shadow-md">
-                      Certificate Revoked
-                    </h1>
+                <CertificatePreview overrideData={previewCert.status === 'Revoked' ? { ...previewCert, recipientName: "REDACTED", email: "REDACTED", courseName: "REDACTED", internshipRole: "REDACTED", directorName: "REDACTED" } : previewCert} />
+              </div>
+              
+              {previewCert.status === 'Revoked' && (
+                <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm p-4 text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-red-50 text-red-500 shadow-xl">
+                    <XCircle className="w-8 h-8" />
                   </div>
-                )}
-              </div>
-              <div className="flex gap-4 w-full justify-center">
-                <Button variant="outline" className="bg-[#121217] text-white hover:bg-[#1A1A22] border-border/10" asChild>
-                  <Link to={`/verify/${previewCert.id}`} target="_blank">Open Public Page</Link>
-                </Button>
-                
-                {previewCert.status === 'Revoked' ? (
-                  <Button variant="outline" className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border-emerald-500/20" onClick={() => handleUnblock(previewCert.id)}>
-                    <CheckCircle className="w-4 h-4 mr-2" /> Unblock
-                  </Button>
-                ) : (
-                  <Button variant="outline" className="bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 border-orange-500/20" onClick={() => handleRevoke(previewCert.id)}>
-                    <Ban className="w-4 h-4 mr-2" /> Block
-                  </Button>
-                )}
-                
-                <Button variant="outline" className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border-red-500/20" onClick={() => handleDelete(previewCert.id)}>
-                  <Trash2 className="w-4 h-4 mr-2" /> Delete
-                </Button>
-                
-                <Button className="bg-[#121217] text-slate-300 hover:text-white border-none" variant="outline" onClick={() => setPreviewCert(null)}>Close</Button>
-              </div>
+                  <h1 className="text-3xl font-black tracking-tight mb-2 text-red-600 uppercase drop-shadow-md">
+                    Certificate Revoked
+                  </h1>
+                </div>
+              )}
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+            <div className="flex gap-4 w-full justify-center">
+              <Button variant="outline" className="bg-[#121217] text-white hover:bg-[#1A1A22] border-border/10" asChild>
+                <Link to={`/verify/${previewCert.id}`} target="_blank">Open Public Page</Link>
+              </Button>
+              
+              {previewCert.status === 'Revoked' ? (
+                <Button variant="outline" className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border-emerald-500/20" onClick={() => handleUnblock(previewCert.id)}>
+                  <CheckCircle className="w-4 h-4 mr-2" /> Unblock
+                </Button>
+              ) : (
+                <Button variant="outline" className="bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 border-orange-500/20" onClick={() => handleRevoke(previewCert.id)}>
+                  <Ban className="w-4 h-4 mr-2" /> Block
+                </Button>
+              )}
+              
+              <Button variant="outline" className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border-red-500/20" onClick={() => handleDelete(previewCert.id)}>
+                <Trash2 className="w-4 h-4 mr-2" /> Delete
+              </Button>
+              
+              <Button className="bg-[#121217] text-slate-300 hover:text-white border-none" variant="outline" onClick={() => setPreviewCert(null)}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
