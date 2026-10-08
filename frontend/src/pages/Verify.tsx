@@ -29,7 +29,16 @@ export default function Verify() {
       try {
         await html5QrCode.start(
           { facingMode: "environment" },
-          { fps: 10, qrbox: { width: 250, height: 250 } },
+          { 
+            fps: 10, 
+            qrbox: (viewfinderWidth, viewfinderHeight) => {
+              const minEdgePercentage = 0.7;
+              const minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+              const qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+              return { width: qrboxSize, height: qrboxSize };
+            },
+            aspectRatio: 1.0
+          },
           (decodedText: string) => {
             if (html5QrCode.isScanning) {
               html5QrCode.stop().then(() => {
@@ -127,7 +136,9 @@ export default function Verify() {
             </>
           ) : (
             <div className="animate-in fade-in zoom-in duration-300">
-              <div id="reader" className="w-full max-w-sm mx-auto overflow-hidden rounded-2xl border-4 border-primary/20 mb-6 bg-black"></div>
+              <div id="reader" className="w-full aspect-square min-h-[300px] max-w-sm mx-auto overflow-hidden rounded-2xl border-4 border-primary/20 mb-6 bg-black flex items-center justify-center">
+                <span className="text-white/50 text-sm">Initializing camera...</span>
+              </div>
               <Button 
                 variant="outline" 
                 size="lg" 
